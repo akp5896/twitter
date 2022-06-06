@@ -4,6 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ComposeActvity">
+    tools:context=".ComposeActivity">
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/til"
+        app:counterEnabled="true"
+        app:counterMaxLength="280"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:counterTextAppearance="@style/counterText"
+        app:counterOverflowTextAppearance="@style/counterOverride">
+        <EditText
+            android:id="@+id/etTweetText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/what_s_happening"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:minLines="5"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/til"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/post"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
