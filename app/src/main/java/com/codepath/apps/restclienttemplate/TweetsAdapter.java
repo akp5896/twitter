@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.w3c.dom.Text;
@@ -63,6 +64,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvHandle;
         ImageView ivMedia;
         TextView tvDate;
+        TextView tvName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,16 +74,25 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvHandle = itemView.findViewById(R.id.tvHandle);
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvName = itemView.findViewById(R.id.tvName);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
+            tvName.setText(tweet.user.name);
             tvHandle.setText(tweet.user.handle);
             tvDate.setText(tweet.created_at);
-            Glide.with(context).load(tweet.user.publicImage).into(ivAvatar);
+            Glide.with(context)
+                    .load(tweet.user.publicImage)
+                    .transform(new RoundedCorners(50))
+                    .into(ivAvatar);
             if(tweet.media != null) {
                 ivMedia.setVisibility(View.VISIBLE);
-                Glide.with(context).load(tweet.media).into(ivMedia);
+                Glide
+                        .with(context)
+                        .load(tweet.media)
+                        .transform(new RoundedCorners(30))
+                        .into(ivMedia);
             }
             else {
                 ivMedia.setVisibility(View.GONE);

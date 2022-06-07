@@ -3,29 +3,52 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/tweetContainer"
+        android:paddingBottom="10dp"
+        >
     <ImageView
         android:id="@+id/ivAvatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
     <TextView
-        android:id="@+id/tvHandle"
+        android:id="@+id/tvName"
+        android:layout_marginStart="10dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="handle"
         app:layout_constraintStart_toEndOf="@id/ivAvatar"
         app:layout_constraintTop_toTopOf="parent"
         />
+        <TextView
+            android:id="@+id/tvHandle"
+            android:layout_marginStart="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="handle"
+            android:textColor="@color/medium_gray_30"
+            app:layout_constraintStart_toEndOf="@id/tvName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginStart="20dp"
+            />
     <TextView
         android:id="@+id/tvBody"
+        android:layout_marginStart="10dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="handle"
+        android:textColor="@color/medium_gray"
         app:layout_constraintStart_toEndOf="@id/ivAvatar"
         app:layout_constraintTop_toBottomOf="@+id/tvHandle"
         />
@@ -44,5 +67,35 @@
         app:layout_constraintStart_toEndOf="@+id/ivAvatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBody"
+        android:layout_margin="10dp"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivReply"
+        android:src="@drawable/ic_vector_compose"
+        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/inline_action_disabled"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_vector_retweet"
+        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
+        app:layout_constraintStart_toEndOf="@id/ivReply"
+        app:layout_constraintEnd_toStartOf="@+id/ivHeart"
+        android:id="@+id/ivShare"
+        app:tint="@color/inline_action_disabled"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_vector_heart"
+        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/ivHeart"
+        app:tint="@color/inline_action_disabled"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
