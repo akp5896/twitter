@@ -41,6 +41,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         holder.bind(tweet);
     }
 
+    public void clear() {
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Tweet> list) {
+        tweets.addAll(list);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return tweets.size();
@@ -51,6 +61,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivAvatar;
         TextView tvBody;
         TextView tvHandle;
+        ImageView ivMedia;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,13 +69,20 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivAvatar = itemView.findViewById(R.id.ivAvatar);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvHandle = itemView.findViewById(R.id.tvHandle);
-
+            ivMedia = itemView.findViewById(R.id.ivMedia);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvHandle.setText(tweet.user.handle);
             Glide.with(context).load(tweet.user.publicImage).into(ivAvatar);
+            if(tweet.media != null) {
+                ivMedia.setVisibility(View.VISIBLE);
+                Glide.with(context).load(tweet.media).into(ivMedia);
+            }
+            else {
+                ivMedia.setVisibility(View.GONE);
+            }
         }
     }
 }
