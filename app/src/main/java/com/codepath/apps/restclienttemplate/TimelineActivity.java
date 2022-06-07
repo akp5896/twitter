@@ -51,8 +51,6 @@ public class TimelineActivity extends AppCompatActivity {
         binding.rvTimeline.setLayoutManager(new LinearLayoutManager(this));
         binding.rvTimeline.setAdapter(adapter);
 
-
-
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
