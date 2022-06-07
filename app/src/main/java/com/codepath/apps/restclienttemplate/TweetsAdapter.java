@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.w3c.dom.Text;
@@ -58,44 +59,34 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView ivAvatar;
-        TextView tvBody;
-        TextView tvHandle;
-        ImageView ivMedia;
-        TextView tvDate;
-        TextView tvName;
+  ItemTweetBinding binding;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            ivAvatar = itemView.findViewById(R.id.ivAvatar);
-            tvBody = itemView.findViewById(R.id.tvBody);
-            tvHandle = itemView.findViewById(R.id.tvHandle);
-            ivMedia = itemView.findViewById(R.id.ivMedia);
-            tvDate = itemView.findViewById(R.id.tvDate);
-            tvName = itemView.findViewById(R.id.tvName);
+            binding = ItemTweetBinding.bind(itemView);
         }
 
         public void bind(Tweet tweet) {
-            tvBody.setText(tweet.body);
-            tvName.setText(tweet.user.name);
-            tvHandle.setText(String.format("@%s", tweet.user.handle));
-            tvDate.setText(tweet.created_at);
+            binding.tvBody.setText(tweet.body);
+            binding.tvName.setText(tweet.user.name);
+            binding.tvHandle.setText(String.format("@%s", tweet.user.handle));
+            binding.tvDate.setText(tweet.created_at);
+            binding.tvLikesCount.setText(tweet.likes.toString());
+            binding.tvRetweetCount.setText(tweet.retweets.toString());
             Glide.with(context)
                     .load(tweet.user.publicImage)
                     .transform(new RoundedCorners(50))
-                    .into(ivAvatar);
+                    .into(binding.ivAvatar);
             if(tweet.media != null) {
-                ivMedia.setVisibility(View.VISIBLE);
+                binding.ivMedia.setVisibility(View.VISIBLE);
                 Glide
                         .with(context)
                         .load(tweet.media)
                         .transform(new RoundedCorners(30))
-                        .into(ivMedia);
+                        .into(binding.ivMedia);
             }
             else {
-                ivMedia.setVisibility(View.GONE);
+                binding.ivMedia.setVisibility(View.GONE);
             }
         }
     }

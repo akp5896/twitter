@@ -80,23 +80,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/inline_action_disabled"
         />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
+        app:layout_constraintStart_toEndOf="@id/ivReply"
+        app:layout_constraintEnd_toStartOf="@+id/viewHeart">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_vector_retweet"
-        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
-        app:layout_constraintStart_toEndOf="@id/ivReply"
-        app:layout_constraintEnd_toStartOf="@+id/ivHeart"
         android:id="@+id/ivShare"
         app:tint="@color/inline_action_disabled"
         />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvRetweetCount"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/viewHeart">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_vector_heart"
-        app:layout_constraintTop_toBottomOf="@+id/tweetContainer"
-        app:layout_constraintEnd_toEndOf="parent"
+
         android:id="@+id/ivHeart"
         app:tint="@color/inline_action_disabled"
         />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvLikesCount"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

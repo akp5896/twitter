@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.content.Intent;
 import android.text.format.DateUtils;
 
 import org.json.JSONArray;
@@ -19,6 +20,10 @@ public class Tweet {
     public String created_at;
     public User user;
     public String media;
+    public  Integer likes;
+    public Boolean isLiked;
+    public  Integer retweets;
+    public Boolean retweeted;
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
@@ -27,6 +32,10 @@ public class Tweet {
 
             tweet.created_at = getRelativeTimeAgo(jsonObject.getString("created_at"));
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+            tweet.likes = jsonObject.getInt("favorite_count");
+            tweet.isLiked = jsonObject.getBoolean("favorited");
+            tweet.retweeted = jsonObject.getBoolean("retweeted");
+            tweet.retweets = jsonObject.getInt("retweet_count");
             if(jsonObject.getJSONObject("entities").has("media"))
             {
                 tweet.media = jsonObject.
