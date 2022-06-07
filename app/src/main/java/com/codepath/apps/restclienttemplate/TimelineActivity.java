@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,6 +27,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import fragments.ComposeTweet;
 import okhttp3.Headers;
 
 public class TimelineActivity extends AppCompatActivity {
@@ -33,10 +35,10 @@ public class TimelineActivity extends AppCompatActivity {
     private static final String TAG = "TIMELINE ACTIVITY";
     private final int REQUEST_CODE = 20;
 
-    List<Tweet> tweets = new ArrayList<>();
-    ActivityTimelineBinding binding;
-    TwitterClient client;
-    TweetsAdapter adapter;
+    public List<Tweet> tweets = new ArrayList<>();
+    public ActivityTimelineBinding binding;
+    public TwitterClient client;
+    public TweetsAdapter adapter;
     private MenuItem miActionProgressItem;
 
     @Override
@@ -96,8 +98,11 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.compose) {
             Toast.makeText(this, "Compose!", Toast.LENGTH_LONG).show();
-            Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
-            startActivityForResult(i, REQUEST_CODE);
+            //Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
+            //startActivityForResult(i, REQUEST_CODE);
+            FragmentManager fm = getSupportFragmentManager();
+            ComposeTweet composeFragment = ComposeTweet.newInstance();
+            composeFragment.show(fm, "fragment_compose_tweet");
         }
         if(item.getItemId() == R.id.logout) {
             TwitterApp.getRestClient(TimelineActivity.this).clearAccessToken();

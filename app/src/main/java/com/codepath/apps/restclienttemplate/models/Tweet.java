@@ -23,7 +23,8 @@ public class Tweet {
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         try {
-            tweet.body = jsonObject.getString("text");
+           tweet.body = jsonObject.getString("text");
+
             tweet.created_at = getRelativeTimeAgo(jsonObject.getString("created_at"));
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
             if(jsonObject.getJSONObject("entities").has("media"))

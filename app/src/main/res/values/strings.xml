@@ -8,5 +8,7 @@
     <string name="what_s_happening">What\'s happening?</string>
     <string name="post">Post</string>
     <string name="date">Date</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

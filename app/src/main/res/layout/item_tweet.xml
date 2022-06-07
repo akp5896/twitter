@@ -46,11 +46,13 @@
         android:id="@+id/tvBody"
         android:layout_marginStart="10dp"
         android:layout_width="0dp"
+        android:autoLink="all"
         android:layout_height="wrap_content"
         android:text="handle"
         android:textColor="@color/medium_gray"
         app:layout_constraintStart_toEndOf="@id/ivAvatar"
         app:layout_constraintTop_toBottomOf="@+id/tvHandle"
+        app:layout_constraintEnd_toEndOf="parent"
         />
     <TextView
         android:id="@+id/tvDate"
