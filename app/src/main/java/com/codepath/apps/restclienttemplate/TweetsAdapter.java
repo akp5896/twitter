@@ -62,6 +62,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody;
         TextView tvHandle;
         ImageView ivMedia;
+        TextView tvDate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,11 +71,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvBody = itemView.findViewById(R.id.tvBody);
             tvHandle = itemView.findViewById(R.id.tvHandle);
             ivMedia = itemView.findViewById(R.id.ivMedia);
+            tvDate = itemView.findViewById(R.id.tvDate);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvHandle.setText(tweet.user.handle);
+            tvDate.setText(tweet.created_at);
             Glide.with(context).load(tweet.user.publicImage).into(ivAvatar);
             if(tweet.media != null) {
                 ivMedia.setVisibility(View.VISIBLE);

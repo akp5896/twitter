@@ -37,6 +37,7 @@ public class TimelineActivity extends AppCompatActivity {
     ActivityTimelineBinding binding;
     TwitterClient client;
     TweetsAdapter adapter;
+    private MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +51,7 @@ public class TimelineActivity extends AppCompatActivity {
         binding.rvTimeline.setLayoutManager(new LinearLayoutManager(this));
         binding.rvTimeline.setAdapter(adapter);
 
-        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TwitterApp.getRestClient(TimelineActivity.this).clearAccessToken();
-                finish();
-            }
-        });
 
-        populateHomeTimeline();
 
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -73,6 +66,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void fetchTimelineAsync(int i) {
+        showProgressBar();
         client.getTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -81,11 +75,13 @@ public class TimelineActivity extends AppCompatActivity {
                 tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                 adapter.notifyItemRangeInserted(0, 25);
                 binding.swipeContainer.setRefreshing(false);
+                hideProgressBar();
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.i(TAG, "failure: " + response);
+                hideProgressBar();
             }
         });
     }
@@ -93,6 +89,8 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        populateHomeTimeline();
         return true;
     }
 
@@ -102,6 +100,10 @@ public class TimelineActivity extends AppCompatActivity {
             Toast.makeText(this, "Compose!", Toast.LENGTH_LONG).show();
             Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
             startActivityForResult(i, REQUEST_CODE);
+        }
+        if(item.getItemId() == R.id.logout) {
+            TwitterApp.getRestClient(TimelineActivity.this).clearAccessToken();
+            finish();
         }
         return true;
     }
@@ -120,19 +122,38 @@ public class TimelineActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+
     private void populateHomeTimeline() {
+        showProgressBar();
         client.getTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "success");
                 tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                 adapter.notifyItemRangeInserted(0, 25);
+                hideProgressBar();
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.i(TAG, "failure: " + response);
+                hideProgressBar();
             }
         });
+    }
+
+    public void showProgressBar() {
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        miActionProgressItem.setVisible(false);
     }
 }
