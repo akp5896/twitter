@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -32,28 +33,24 @@ public class TimelineActivity extends AppCompatActivity {
     private static final String TAG = "TIMELINE ACTIVITY";
     private final int REQUEST_CODE = 20;
 
-    TwitterClient client;
-    RecyclerView rvTweets;
     List<Tweet> tweets = new ArrayList<>();
+    ActivityTimelineBinding binding;
+    TwitterClient client;
     TweetsAdapter adapter;
-    Button btnLogout;
-
-    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        binding = ActivityTimelineBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         client = TwitterApp.getRestClient(this);
 
-        rvTweets = findViewById(R.id.rvTimeline);
         adapter = new TweetsAdapter(this, tweets);
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
-        rvTweets.setAdapter(adapter);
+        binding.rvTimeline.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvTimeline.setAdapter(adapter);
 
-        btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TwitterApp.getRestClient(TimelineActivity.this).clearAccessToken();
@@ -63,14 +60,13 @@ public class TimelineActivity extends AppCompatActivity {
 
         populateHomeTimeline();
 
-        swipeContainer = findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 fetchTimelineAsync(0);
             }
         });
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -84,7 +80,7 @@ public class TimelineActivity extends AppCompatActivity {
                 adapter.clear();
                 tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                 adapter.notifyItemRangeInserted(0, 25);
-                swipeContainer.setRefreshing(false);
+                binding.swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -119,7 +115,7 @@ public class TimelineActivity extends AppCompatActivity {
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
             tweets.add(0, tweet);
             adapter.notifyItemInserted(0);
-            rvTweets.smoothScrollToPosition(0);
+            binding.rvTimeline.smoothScrollToPosition(0);
         }
 
     }
