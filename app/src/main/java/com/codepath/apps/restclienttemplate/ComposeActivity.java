@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     ActivityComposeBinding binding;
     TwitterClient client;
+    private MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class ComposeActivity extends AppCompatActivity {
                     Toast.makeText(ComposeActivity.this, "Sorry, text too long", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                miActionProgressItem.setVisible(true);
                 Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_SHORT).show();
                 client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
                     @Override
@@ -52,15 +56,24 @@ public class ComposeActivity extends AppCompatActivity {
                         Intent i = new Intent();
                         i.putExtra("tweet", Parcels.wrap(tweet));
                         setResult(RESULT_OK, i);
+                        miActionProgressItem.setVisible(false);
                         finish();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        miActionProgressItem.setVisible(false);
                         Log.i(TAG, "failed to publish");
                     }
                 });
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.compose, menu);
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        return true;
     }
 }
