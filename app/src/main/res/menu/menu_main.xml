@@ -11,6 +11,7 @@
     <item
         android:id="@+id/logout"
         android:title="Log out"
+
         app:showAsAction="always" />
 
     <item

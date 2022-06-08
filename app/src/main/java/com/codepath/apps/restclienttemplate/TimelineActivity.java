@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.icu.text.LocaleDisplayNames;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.TweetDao;
@@ -29,6 +31,7 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public class TimelineActivity extends AppCompatActivity {
 
         binding = ActivityTimelineBinding.inflate(getLayoutInflater());
         setSupportActionBar(binding.toolbar);
+
+        getSupportActionBar().setTitle("");
         setContentView(binding.getRoot());
 
         client = TwitterApp.getRestClient(this);
@@ -89,6 +94,48 @@ public class TimelineActivity extends AppCompatActivity {
         binding.rvTimeline.addOnScrollListener(scrollListener);
 
         populateHomeTimeline();
+        setBanner();
+    }
+
+    private void setBanner() {
+        client.getUsername(new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    String name = json.jsonObject.getString("screen_name");
+                    Log.i(TAG, name);
+                    getBanner(name);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG, "cannot get current username");
+            }
+        });
+    }
+
+    private void getBanner(String name) {
+        client.getBanner(name, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    String bannerUrl = json.jsonObject.getString("profile_banner_url");
+                    Glide.with(getApplicationContext()).load(bannerUrl).into(binding.ivBanner);
+                    Log.d(TAG, bannerUrl);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG, "cannot get banner");
+            }
+        });
     }
 
     private void fetchTimelineAsync(int i) {
@@ -192,7 +239,13 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void FetchFromDb() {
-        tweetWithUsers = tweetDao.recentItems();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                tweetWithUsers = tweetDao.recentItems();
+            }
+        });
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
