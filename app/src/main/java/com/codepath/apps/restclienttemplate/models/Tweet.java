@@ -25,12 +25,14 @@ public class Tweet {
     public Integer retweets;
     public Boolean retweeted;
     public Long id;
+    public  Long selfId;
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         try {
            tweet.body = jsonObject.getString("text");
             tweet.id = jsonObject.getLong("id");
+            tweet.selfId = jsonObject.getLong("id");
             tweet.created_at = getRelativeTimeAgo(jsonObject.getString("created_at"));
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
             tweet.likes = jsonObject.getInt("favorite_count");

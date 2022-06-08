@@ -55,6 +55,7 @@ public class ComposeActivity extends AppCompatActivity {
                         Log.i(TAG, "success to publish");
                         Tweet tweet = Tweet.fromJson(json.jsonObject);
                         Intent i = new Intent();
+
                         i.putExtra("tweet", Parcels.wrap(tweet));
                         setResult(RESULT_OK, i);
                         miActionProgressItem.setVisible(false);

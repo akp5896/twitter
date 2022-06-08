@@ -40,6 +40,9 @@ public class TimelineActivity extends AppCompatActivity {
     public TwitterClient client;
     public TweetsAdapter adapter;
     private MenuItem miActionProgressItem;
+    private Long maxId = 0L;
+    private EndlessRecyclerViewScrollListener scrollListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,8 @@ public class TimelineActivity extends AppCompatActivity {
         client = TwitterApp.getRestClient(this);
 
         adapter = new TweetsAdapter(this, tweets);
-        binding.rvTimeline.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.rvTimeline.setLayoutManager(linearLayoutManager);
         binding.rvTimeline.setAdapter(adapter);
 
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -63,11 +67,19 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_red_dark);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                populateHomeTimeline();
+            }
+        };
+        binding.rvTimeline.addOnScrollListener(scrollListener);
     }
 
     private void fetchTimelineAsync(int i) {
         showProgressBar();
-        client.getTimeline(new JsonHttpResponseHandler() {
+        client.getTimeline(0L, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "success");
@@ -75,6 +87,7 @@ public class TimelineActivity extends AppCompatActivity {
                 tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                 adapter.notifyItemRangeInserted(0, 25);
                 binding.swipeContainer.setRefreshing(false);
+                maxId = tweets.get(tweets.size() - 1).selfId;
                 hideProgressBar();
             }
 
@@ -84,6 +97,7 @@ public class TimelineActivity extends AppCompatActivity {
                 hideProgressBar();
             }
         });
+
     }
 
     @Override
@@ -135,12 +149,13 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void populateHomeTimeline() {
         showProgressBar();
-        client.getTimeline(new JsonHttpResponseHandler() {
+        client.getTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "success");
                 tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
                 adapter.notifyItemRangeInserted(0, 25);
+                maxId = tweets.get(tweets.size() - 1).selfId;
                 hideProgressBar();
             }
 
