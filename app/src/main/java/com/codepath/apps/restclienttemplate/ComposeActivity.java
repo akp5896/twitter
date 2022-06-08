@@ -48,7 +48,8 @@ public class ComposeActivity extends AppCompatActivity {
                 }
                 miActionProgressItem.setVisible(true);
                 Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_SHORT).show();
-                client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
+
+                client.publishTweet(tweetContent, -1L, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Log.i(TAG, "success to publish");

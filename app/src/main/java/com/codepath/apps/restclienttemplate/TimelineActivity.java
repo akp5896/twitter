@@ -101,7 +101,7 @@ public class TimelineActivity extends AppCompatActivity {
             //Intent i = new Intent(TimelineActivity.this, ComposeActivity.class);
             //startActivityForResult(i, REQUEST_CODE);
             FragmentManager fm = getSupportFragmentManager();
-            ComposeTweet composeFragment = ComposeTweet.newInstance();
+            ComposeTweet composeFragment = ComposeTweet.newInstance(null);
             composeFragment.show(fm, "fragment_compose_tweet");
         }
         if(item.getItemId() == R.id.logout) {

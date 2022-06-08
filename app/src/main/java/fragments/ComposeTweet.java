@@ -31,11 +31,13 @@ import okhttp3.Headers;
 public class ComposeTweet extends DialogFragment {
     private static final String TAG = "COMPOSE TWEET";
     FragmentComposeTweetBinding binding;
+    Tweet tweet;
 
     public ComposeTweet() {
     }
-    public static ComposeTweet newInstance() {
+    public static ComposeTweet newInstance(Tweet tweet) {
         ComposeTweet fragment = new ComposeTweet();
+        fragment.tweet = tweet;
         return fragment;
     }
 
@@ -64,14 +66,24 @@ public class ComposeTweet extends DialogFragment {
                     return;
                 }
                 Toast.makeText(getActivity().getApplicationContext(), tweetContent, Toast.LENGTH_SHORT).show();
-                activity.client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
+                Long inResponseToId;
+                if(tweet == null) {
+                    inResponseToId  = -1L;
+                }
+                else {
+                    inResponseToId = tweet.id;
+                    tweetContent = "@" + tweet.user.handle + " " + tweetContent;
+                }
+                activity.client.publishTweet(tweetContent, inResponseToId, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Log.i(TAG, "success to publish");
                         Tweet tweet = Tweet.fromJson(json.jsonObject);
-                        activity.tweets.add(0, tweet);
-                        activity.adapter.notifyItemInserted(0);
-                        activity.binding.rvTimeline.smoothScrollToPosition(0);
+                        if(inResponseToId == -1) {
+                            activity.tweets.add(0, tweet);
+                            activity.adapter.notifyItemInserted(0);
+                            activity.binding.rvTimeline.smoothScrollToPosition(0);
+                        }
                         dismiss();
                     }
 

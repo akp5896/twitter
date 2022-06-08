@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,8 +21,10 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.w3c.dom.Text;
 
+import java.sql.Time;
 import java.util.List;
 
+import fragments.ComposeTweet;
 import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
@@ -85,6 +88,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             getaVoid(tweet);
             retweetTrigger(tweet);
+
+            binding.ivReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
+                    ComposeTweet composeFragment = ComposeTweet.newInstance(tweet);
+                    composeFragment.show(fm, "fragment_compose_tweet");
+                }
+            });
 
             binding.tvRetweetCount.setText(tweet.retweets.toString());
             Glide.with(context)
