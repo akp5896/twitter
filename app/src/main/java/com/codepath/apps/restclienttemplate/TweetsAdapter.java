@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +18,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
+import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.sql.Time;
@@ -95,6 +98,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
                     ComposeTweet composeFragment = ComposeTweet.newInstance(tweet);
                     composeFragment.show(fm, "fragment_compose_tweet");
+                }
+            });
+
+            binding.tvName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, UserProfileActivity.class);
+                    i.putExtra(User.class.getSimpleName(), Parcels.wrap(tweet.user));
+                    context.startActivity(i);
                 }
             });
 
