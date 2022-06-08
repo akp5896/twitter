@@ -1,7 +1,14 @@
 package com.codepath.apps.restclienttemplate.models;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.text.format.DateUtils;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,31 +22,45 @@ import java.util.List;
 import java.util.Locale;
 
 @Parcel
+@Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId"))
 public class Tweet {
+    @ColumnInfo
     public String body;
+    @ColumnInfo
     public String created_at;
+    @Ignore
     public User user;
+    @ColumnInfo
     public String media;
+    @ColumnInfo
     public  Integer likes;
+    @ColumnInfo
     public Boolean isLiked;
+    @ColumnInfo
     public Integer retweets;
+    @ColumnInfo
     public Boolean retweeted;
-    public Long id;
-    public  Long selfId;
+    @ColumnInfo
+    @PrimaryKey
+    public Long tweetId;
+    @Ignore
     public boolean isRetweeted = false;
+    @ColumnInfo
+    public Long userId;
+
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         try {
            tweet.body = jsonObject.getString("text");
-            tweet.id = jsonObject.getLong("id");
-            tweet.selfId = jsonObject.getLong("id");
+            tweet.tweetId = jsonObject.getLong("id");
             tweet.created_at = getRelativeTimeAgo(jsonObject.getString("created_at"));
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
             tweet.likes = jsonObject.getInt("favorite_count");
             tweet.isLiked = jsonObject.getBoolean("favorited");
             tweet.retweeted = jsonObject.getBoolean("retweeted");
             tweet.retweets = jsonObject.getInt("retweet_count");
+            tweet.userId = tweet.user.id;
             if(jsonObject.getJSONObject("entities").has("media"))
             {
                 tweet.media = jsonObject.

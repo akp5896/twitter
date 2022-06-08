@@ -1,5 +1,9 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,10 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
+@Entity
 public class User {
+    @ColumnInfo
     public String name;
+    @ColumnInfo
     public String handle;
+    @ColumnInfo
     public String publicImage;
+    @ColumnInfo
+    @PrimaryKey
     public Long id;
 
     public User() {
@@ -39,6 +49,14 @@ public class User {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        return users;
+    }
+
+    public static List<User> fromTweetArray(List<Tweet> tweetsList) {
+        List<User> users = new ArrayList<>();
+        for(Tweet t : tweetsList) {
+            users.add(t.user);
         }
         return users;
     }

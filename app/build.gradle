@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+ apply plugin: 'com.android.application'
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
 def apikeyProperties = new Properties()

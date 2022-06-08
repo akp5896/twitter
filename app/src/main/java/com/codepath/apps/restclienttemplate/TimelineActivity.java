@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +22,10 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetDao;
+import com.codepath.apps.restclienttemplate.models.TweetWithUser;
+import com.codepath.apps.restclienttemplate.models.User;
+import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -42,7 +49,8 @@ public class TimelineActivity extends AppCompatActivity {
     private MenuItem miActionProgressItem;
     private Long maxId = 0L;
     private EndlessRecyclerViewScrollListener scrollListener;
-
+    TweetDao tweetDao;
+    private List<TweetWithUser> tweetWithUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,8 @@ public class TimelineActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         client = TwitterApp.getRestClient(this);
+
+        tweetDao =((TwitterApp)getApplicationContext()).getMyDatabase().tweetDao();
 
         adapter = new TweetsAdapter(this, tweets);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -76,6 +86,7 @@ public class TimelineActivity extends AppCompatActivity {
         };
         binding.rvTimeline.addOnScrollListener(scrollListener);
 
+        populateHomeTimeline();
     }
 
     private void fetchTimelineAsync(int i) {
@@ -86,16 +97,16 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.i(TAG, "success");
                 adapter.clear();
                 tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
-                adapter.notifyItemRangeInserted(0, 25);
+                adapter.notifyDataSetChanged();
                 binding.swipeContainer.setRefreshing(false);
-                maxId = tweets.get(tweets.size() - 1).selfId;
+                maxId = tweets.get(tweets.size() - 1).tweetId;
                 hideProgressBar();
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.i(TAG, "failure: " + response);
-                hideProgressBar();
+                FetchFromDb();
             }
         });
 
@@ -104,8 +115,6 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        miActionProgressItem = menu.findItem(R.id.miActionProgress);
-        populateHomeTimeline();
         return true;
     }
 
@@ -154,25 +163,53 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "success");
-                tweets.addAll(Tweet.fromJsonArray(json.jsonArray));
+                List<Tweet> tweetsList = Tweet.fromJsonArray(json.jsonArray);
+                tweets.addAll(tweetsList);
                 adapter.notifyItemRangeInserted(0, 25);
-                maxId = tweets.get(tweets.size() - 1).selfId;
+                maxId = tweets.get(tweets.size() - 1).tweetId;
+                List<User> usersFromNet = User.fromTweetArray(tweetsList);
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        tweetDao.insertModel(usersFromNet.toArray(new User[0]));
+                        tweetDao.insertModel(tweetsList.toArray(new Tweet[0]));
+                    }
+                });
+                Log.i(TAG, "saving data");
                 hideProgressBar();
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.i(TAG, "failure: " + response);
+
+                Log.i(TAG, "from db");
+                FetchFromDb();
+            }
+        });
+    }
+
+    private void FetchFromDb() {
+        tweetWithUsers = tweetDao.recentItems();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
+                adapter.clear();
+                adapter.addAll(tweetsFromDB);
+                adapter.notifyDataSetChanged();
                 hideProgressBar();
             }
         });
     }
 
     public void showProgressBar() {
-        miActionProgressItem.setVisible(true);
+        if(miActionProgressItem != null)
+            miActionProgressItem.setVisible(true);
     }
 
     public void hideProgressBar() {
-        miActionProgressItem.setVisible(false);
+        if(miActionProgressItem != null)
+            miActionProgressItem.setVisible(false);
     }
 }

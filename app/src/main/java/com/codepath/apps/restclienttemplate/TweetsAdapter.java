@@ -134,7 +134,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 public void onClick(View view) {
                     TwitterClient client = TwitterApp.getRestClient(context);
                     if(!tweet.retweeted) {
-                        client.retweet(tweet.id, new JsonHttpResponseHandler() {
+                        client.retweet(tweet.tweetId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.retweeted = true;
@@ -150,7 +150,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             }
                         });
                     } else {
-                        client.unretweet(tweet.id, new JsonHttpResponseHandler() {
+                        client.unretweet(tweet.tweetId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.retweeted = false;
@@ -176,7 +176,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 public void onClick(View view) {
                     TwitterClient client = TwitterApp.getRestClient(context);
                     if(!tweet.isLiked) {
-                        client.likeTweet(tweet.selfId, new JsonHttpResponseHandler() {
+                        client.likeTweet(tweet.tweetId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.isLiked = true;
@@ -192,7 +192,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             }
                         });
                     } else {
-                        client.destroy(tweet.id, new JsonHttpResponseHandler() {
+                        client.destroy(tweet.tweetId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.isLiked = false;

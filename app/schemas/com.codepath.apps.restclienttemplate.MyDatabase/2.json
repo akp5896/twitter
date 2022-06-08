@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "a904e68d80e7328ebc460096e947e49d",
+    "version": 2,
+    "identityHash": "f974e4cd3aa7aeed616e278a5a614bed",
     "entities": [
       {
         "tableName": "SampleModel",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "Tweet",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`body` TEXT, `created_at` TEXT, `media` TEXT, `likes` INTEGER, `isLiked` INTEGER, `retweets` INTEGER, `retweeted` INTEGER, `id` INTEGER, `userId` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`userId`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`body` TEXT, `created_at` TEXT, `media` TEXT, `likes` INTEGER, `isLiked` INTEGER, `retweets` INTEGER, `retweeted` INTEGER, `tweetId` INTEGER, `userId` INTEGER, PRIMARY KEY(`tweetId`), FOREIGN KEY(`userId`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "body",
@@ -77,8 +77,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "tweetId",
+            "columnName": "tweetId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -91,7 +91,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "tweetId"
           ],
           "autoGenerate": false
         },
@@ -152,7 +152,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a904e68d80e7328ebc460096e947e49d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f974e4cd3aa7aeed616e278a5a614bed')"
     ]
   }
 }

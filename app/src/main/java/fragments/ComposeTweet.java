@@ -71,7 +71,7 @@ public class ComposeTweet extends DialogFragment {
                     inResponseToId  = -1L;
                 }
                 else {
-                    inResponseToId = tweet.id;
+                    inResponseToId = tweet.tweetId;
                     tweetContent = "@" + tweet.user.handle + " " + tweetContent;
                 }
                 activity.client.publishTweet(tweetContent, inResponseToId, new JsonHttpResponseHandler() {
