@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.w3c.dom.Text;
 
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
@@ -72,6 +76,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             binding.tvHandle.setText(String.format("@%s", tweet.user.handle));
             binding.tvDate.setText(tweet.created_at);
             binding.tvLikesCount.setText(tweet.likes.toString());
+            if(tweet.isLiked) {
+                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_like_pressed));
+            }
+            if(tweet.retweeted) {
+                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_retweet));
+            }
+
+            getaVoid(tweet);
+            retweetTrigger(tweet);
+
             binding.tvRetweetCount.setText(tweet.retweets.toString());
             Glide.with(context)
                     .load(tweet.user.publicImage)
@@ -88,6 +102,90 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             else {
                 binding.ivMedia.setVisibility(View.GONE);
             }
+        }
+
+        private void retweetTrigger(Tweet tweet) {
+            binding.ivShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TwitterClient client = TwitterApp.getRestClient(context);
+                    if(!tweet.retweeted) {
+                        client.retweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                tweet.retweeted = true;
+                                tweet.retweets++;
+                                binding.tvRetweetCount.setText(tweet.retweets.toString());
+                                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_retweet));
+                                Log.i("LIKE", "success");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("LIKE", response);
+                            }
+                        });
+                    } else {
+                        client.unretweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                tweet.retweeted = false;
+                                tweet.retweets--;
+                                binding.tvRetweetCount.setText(tweet.retweets.toString());
+                                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_pressed));
+                                Log.i("LIKE", "success");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("LIKE", response);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        private void getaVoid(Tweet tweet) {
+            binding.ivHeart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TwitterClient client = TwitterApp.getRestClient(context);
+                    if(!tweet.retweeted) {
+                        client.likeTweet(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                tweet.isLiked = true;
+                                tweet.likes++;
+                                binding.tvLikesCount.setText(tweet.likes.toString());
+                                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_like_pressed));
+                                Log.i("LIKE", "success");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("LIKE", response);
+                            }
+                        });
+                    } else {
+                        client.destroy(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                tweet.isLiked = false;
+                                tweet.likes--;
+                                binding.tvLikesCount.setText(tweet.likes.toString());
+                                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
+                                Log.i("LIKE", "success");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("LIKE", response);
+                            }
+                    });
+                    }
+                }
+            });
         }
     }
 }

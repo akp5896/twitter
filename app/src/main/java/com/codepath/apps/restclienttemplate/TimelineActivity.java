@@ -60,9 +60,9 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_red_dark);
     }
 
     private void fetchTimelineAsync(int i) {

@@ -22,14 +22,15 @@ public class Tweet {
     public String media;
     public  Integer likes;
     public Boolean isLiked;
-    public  Integer retweets;
+    public Integer retweets;
     public Boolean retweeted;
+    public Long id;
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         try {
            tweet.body = jsonObject.getString("text");
-
+            tweet.id = jsonObject.getLong("id");
             tweet.created_at = getRelativeTimeAgo(jsonObject.getString("created_at"));
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
             tweet.likes = jsonObject.getInt("favorite_count");
@@ -44,7 +45,14 @@ public class Tweet {
                         getJSONObject(0).
                         getString("media_url_https");
             }
-
+            if(jsonObject.has("retweeted_status")) {
+                JSONObject retweeted_status = jsonObject.getJSONObject("retweeted_status");
+                tweet.likes = retweeted_status.getInt("favorite_count");
+                tweet.isLiked = retweeted_status.getBoolean("favorited");
+                tweet.retweeted = retweeted_status.getBoolean("retweeted");
+                tweet.retweets = retweeted_status.getInt("retweet_count");
+                tweet.id = retweeted_status.getLong("id");
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

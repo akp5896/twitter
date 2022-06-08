@@ -90,7 +90,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_vector_retweet"
+        android:src="@drawable/ic_retweet_twitter"
         android:id="@+id/ivShare"
         app:tint="@color/inline_action_disabled"
         />
