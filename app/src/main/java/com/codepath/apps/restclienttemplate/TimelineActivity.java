@@ -75,6 +75,7 @@ public class TimelineActivity extends AppCompatActivity {
             }
         };
         binding.rvTimeline.addOnScrollListener(scrollListener);
+
     }
 
     private void fetchTimelineAsync(int i) {
