@@ -26,6 +26,7 @@ public class Tweet {
     public Boolean retweeted;
     public Long id;
     public  Long selfId;
+    public boolean isRetweeted = false;
 
     public static Tweet fromJson(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
@@ -48,12 +49,7 @@ public class Tweet {
                         getString("media_url_https");
             }
             if(jsonObject.has("retweeted_status")) {
-                JSONObject retweeted_status = jsonObject.getJSONObject("retweeted_status");
-                tweet.likes = retweeted_status.getInt("favorite_count");
-                tweet.isLiked = retweeted_status.getBoolean("favorited");
-                tweet.retweeted = retweeted_status.getBoolean("retweeted");
-                tweet.retweets = retweeted_status.getInt("retweet_count");
-                tweet.id = retweeted_status.getLong("id");
+                tweet.isRetweeted = true;
             }
 
         } catch (JSONException e) {
@@ -69,7 +65,9 @@ public class Tweet {
         List<Tweet> tweets = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                tweets.add(Tweet.fromJson(jsonArray.getJSONObject(i)));
+                Tweet tweet = Tweet.fromJson(jsonArray.getJSONObject(i));
+                if(!tweet.isRetweeted)
+                    tweets.add(tweet);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

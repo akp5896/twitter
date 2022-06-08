@@ -175,8 +175,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     TwitterClient client = TwitterApp.getRestClient(context);
-                    if(!tweet.retweeted) {
-                        client.likeTweet(tweet.id, new JsonHttpResponseHandler() {
+                    if(!tweet.isLiked) {
+                        client.likeTweet(tweet.selfId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.isLiked = true;
