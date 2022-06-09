@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.icu.text.LocaleDisplayNames;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +57,7 @@ public class TimelineActivity extends AppCompatActivity {
     TweetDao tweetDao;
     private List<TweetWithUser> tweetWithUsers;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,7 @@ public class TimelineActivity extends AppCompatActivity {
         tweetDao =((TwitterApp)getApplicationContext()).getMyDatabase().tweetDao();
 
         adapter = new TweetsAdapter(this, tweets);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
         binding.rvTimeline.setLayoutManager(linearLayoutManager);
         binding.rvTimeline.setAdapter(adapter);
 
@@ -89,6 +92,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 populateHomeTimeline();
+                Log.d(TAG, "more data loaded");
             }
         };
         binding.rvTimeline.addOnScrollListener(scrollListener);
@@ -155,7 +159,6 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.i(TAG, "failure: " + response);
-                FetchFromDb();
             }
         });
 
@@ -220,8 +223,10 @@ public class TimelineActivity extends AppCompatActivity {
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
-                        tweetDao.insertModel(usersFromNet.toArray(new User[0]));
-                        tweetDao.insertModel(tweetsList.toArray(new Tweet[0]));
+                        if(usersFromNet.size() != 0) {
+                            tweetDao.insertModel(usersFromNet.toArray(new User[0]));
+                            tweetDao.insertModel(tweetsList.toArray(new Tweet[0]));
+                        }
                     }
                 });
                 Log.i(TAG, "saving data");

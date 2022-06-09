@@ -1,14 +1,15 @@
-# Project 2 - *Name of App Here*
+# Project 2 - *Twitter*
 
-**Name of your app** is an android app that allows a user to view their Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
+**Twitter** is an android app that allows a user to view their Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **X** hours spent in total
+Time spent: **21** hours spent in total
 
 ## User Stories
 
 The following **required** functionality is completed:
 
 * [x]	User can **sign in to Twitter** using OAuth login
+* [x] User can ***log out of the application** by tapping on a logout button
 * [x]	User can **view tweets from their home timeline**
   * [x] User is displayed the username, name, and body for each tweet
   * [x] User is displayed the [relative timestamp](https://gist.github.com/nesquena/f786232f5ef72f6e10a7) for each tweet "8m", "7h"
@@ -27,15 +28,15 @@ The following **optional** features are implemented:
 * [x] User sees an **indeterminate progress indicator** when any background or network task is happening
 * [x] User can **select "reply" from home timeline to respond to a tweet**
   * [x] User that wrote the original tweet is **automatically "@" replied in compose**
-* [o] User can tap a tweet to **open a detailed tweet view**
+* [ ] User can tap a tweet to **open a detailed tweet view**
   * [x] User can **take favorite (and unfavorite) or retweet** actions on a tweet
 * [x] User can view more tweets as they scroll with infinite pagination
 * [x] Compose tweet functionality is built using modal overlay
 * [x] User can **click a link within a tweet body** on tweet details view. The click will launch the web browser with relevant page opened.
 * [x] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.org/android/Drawables#vector-drawables) where appropriate.
-* [x] User can view following / followers list through any profile they view.
+* [  ] User can view following / followers list through any profile they view.
 * [x] Use the View Binding library to reduce view boilerplate.
-* [ ] On the Twitter timeline, apply scrolling effects such as [hiding/showing the toolbar](http://guides.codepath.org/android/Using-the-App-ToolBar#reacting-to-scroll) by implementing [CoordinatorLayout](http://guides.codepath.org/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events).
+* [x] On the Twitter timeline, apply scrolling effects such as [hiding/showing the toolbar](http://guides.codepath.org/android/Using-the-App-ToolBar#reacting-to-scroll) by implementing [CoordinatorLayout](http://guides.codepath.org/android/Handling-Scrolls-with-CoordinatorLayout#responding-to-scroll-events).
 * [x] User can **open the twitter app offline and see last loaded tweets**. Persisted in SQLite tweets are refreshed on every application launch. While "live data" is displayed when app can get it from Twitter API, it is also saved for use in offline mode.
 
 The following **additional** features are implemented:
@@ -46,9 +47,9 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/akp5896/twitter/blob/master/walk5.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [Kap](https://getkap.co/).
+GIF created with [Licecap](https://getkap.co/).
 
 ## Notes
 
