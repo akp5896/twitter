@@ -2,13 +2,10 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -22,9 +19,7 @@ import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
-import java.sql.Time;
 import java.util.List;
 
 import fragments.ComposeTweet;
@@ -54,13 +49,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     }
 
     public void clear() {
+        int size = tweets.size();
         tweets.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, size);
     }
 
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(tweets.size(), list.size());
     }
 
     @Override
@@ -69,8 +65,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-  ItemTweetBinding binding;
 
+        ItemTweetBinding binding;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = ItemTweetBinding.bind(itemView);
@@ -82,14 +78,21 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             binding.tvHandle.setText(String.format("@%s", tweet.user.handle));
             binding.tvDate.setText(tweet.created_at);
             binding.tvLikesCount.setText(tweet.likes.toString());
+
             if(tweet.isLiked) {
                 binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_like_pressed));
+            }
+            else  {
+                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
             }
             if(tweet.retweeted) {
                 binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_retweet));
             }
+            else {
+                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
+            }
 
-            getaVoid(tweet);
+            likeTrigger(tweet);
             retweetTrigger(tweet);
 
             binding.ivReply.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +118,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .load(tweet.user.publicImage)
                     .transform(new RoundedCorners(50))
                     .into(binding.ivAvatar);
+
             if(tweet.media != null) {
                 binding.ivMedia.setVisibility(View.VISIBLE);
                 Glide
@@ -150,7 +154,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             }
                         });
                     } else {
-                        client.unretweet(tweet.tweetId, new JsonHttpResponseHandler() {
+                        client.destroyRetweet(tweet.tweetId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.retweeted = false;
@@ -170,7 +174,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             });
         }
 
-        private void getaVoid(Tweet tweet) {
+        private void likeTrigger(Tweet tweet) {
             binding.ivHeart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -192,7 +196,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             }
                         });
                     } else {
-                        client.destroy(tweet.tweetId, new JsonHttpResponseHandler() {
+                        client.destroyLike(tweet.tweetId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 tweet.isLiked = false;

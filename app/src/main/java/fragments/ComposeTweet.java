@@ -79,11 +79,11 @@ public class ComposeTweet extends DialogFragment {
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Log.i(TAG, "success to publish");
                         Tweet tweet = Tweet.fromJson(json.jsonObject);
-                        if(inResponseToId == -1) {
-                            activity.tweets.add(0, tweet);
-                            activity.adapter.notifyItemInserted(0);
-                            activity.binding.rvTimeline.smoothScrollToPosition(0);
-                        }
+
+                        activity.tweets.add(0, tweet);
+                        activity.adapter.notifyItemInserted(0);
+                        activity.binding.rvTimeline.smoothScrollToPosition(0);
+
                         dismiss();
                     }
 

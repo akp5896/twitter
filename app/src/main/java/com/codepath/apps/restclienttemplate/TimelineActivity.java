@@ -207,8 +207,6 @@ public class TimelineActivity extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
-
-
     private void populateHomeTimeline() {
         showProgressBar();
         client.getTimeline(maxId, new JsonHttpResponseHandler() {
@@ -248,19 +246,20 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void run() {
                 tweetWithUsers = tweetDao.recentItems();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
+                        adapter.clear();
+                        adapter.addAll(tweetsFromDB);
+                        adapter.notifyDataSetChanged();
+                        hideProgressBar();
+                    }
+                });
             }
         });
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
-                adapter.clear();
-                adapter.addAll(tweetsFromDB);
-                adapter.notifyDataSetChanged();
-                hideProgressBar();
-            }
-        });
+
     }
 
     public void showProgressBar() {

@@ -16,7 +16,7 @@
         app:expandedTitleMarginStart="48dp"
         app:layout_scrollFlags="scroll|enterAlways">
             <ImageView
-                android:src="@android:drawable/ic_dialog_email"
+                android:src="@color/twitter_blue"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
