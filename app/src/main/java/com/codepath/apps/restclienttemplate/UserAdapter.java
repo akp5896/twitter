@@ -58,7 +58,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
 
         public void bind(User user) {
             binding.tvName.setText(user.name);
-            binding.tvHandle.setText(user.handle);
         }
     }
 }

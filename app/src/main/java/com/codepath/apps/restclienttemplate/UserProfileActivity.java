@@ -42,7 +42,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         user = Parcels.unwrap(getIntent().getParcelableExtra(User.class.getSimpleName()));
 
-
         populateFollowers();
     }
 

@@ -23,6 +23,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import fragments.ComposeTweet;
+import fragments.UserProfileFragment;
 import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
@@ -83,13 +84,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_like_pressed));
             }
             else  {
-                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
+                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.medium_gray));
             }
             if(tweet.retweeted) {
                 binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_retweet));
             }
             else {
-                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
+                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.medium_gray));
             }
 
             likeTrigger(tweet);
@@ -107,9 +108,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             binding.tvName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(context, UserProfileActivity.class);
-                    i.putExtra(User.class.getSimpleName(), Parcels.wrap(tweet.user));
-                    context.startActivity(i);
+                    FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
+                    UserProfileFragment userFragment = UserProfileFragment.newInstance(tweet.user);
+                    userFragment.show(fm, "fragment_user_profile");
                 }
             });
 

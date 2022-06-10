@@ -81,6 +81,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 fetchTimelineAsync(0);
+                setBanner();
             }
         });
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
