@@ -100,7 +100,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         populateHomeTimeline();
         //setBanner();
-        ProfileToolbar.Initialize(binding.header, getApplicationContext(), this);
+        ProfileToolbar.Initialize(binding.header, this);
     }
 
     private void fetchTimelineAsync(int i) {

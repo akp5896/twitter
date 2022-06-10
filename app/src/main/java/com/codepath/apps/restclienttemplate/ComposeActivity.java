@@ -33,6 +33,8 @@ public class ComposeActivity extends AppCompatActivity {
         binding = ActivityComposeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        ProfileToolbar.Initialize(binding.header, this);
+
         client = TwitterApp.getRestClient(this);
 
         binding.btnTweet.setOnClickListener(getButtonListener());

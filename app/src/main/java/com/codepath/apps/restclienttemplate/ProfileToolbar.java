@@ -20,7 +20,8 @@ import okhttp3.internal.http2.Header;
 public class ProfileToolbar {
     private static String TAG = "Profile setup";
 
-    public static void Initialize(HeaderBinding binding, Context context, AppCompatActivity activity) {
+    public static void Initialize(HeaderBinding binding, AppCompatActivity activity) {
+        Context context = activity.getApplicationContext();
         TwitterClient client = TwitterApp.getRestClient(context);
         activity.setSupportActionBar(binding.toolbar);
         activity.getSupportActionBar().setTitle("");
