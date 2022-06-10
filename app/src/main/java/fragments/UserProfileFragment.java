@@ -61,8 +61,8 @@ public class UserProfileFragment extends DialogFragment {
 
         binding.btnClose.setOnClickListener(view1 -> dismiss());
 
-        populateFollowers();
-        populateFollowing();
+        populateFollows("followers/list.json", followersAdapter, followers);
+        populateFollows("friends/list.json", followingAdapter, following);
     }
 
     @Override
@@ -79,15 +79,15 @@ public class UserProfileFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-    private void populateFollowers() {
+    private void populateFollows(String endpoint, UserAdapter adapter, List<User> users) {
         TwitterClient client = TwitterApp.getRestClient(context);
-        client.getFollowersList(user.id, new JsonHttpResponseHandler() {
+        client.getFollows(user.id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 try {
                     List<User> userList = User.fromJsonArray(json.jsonObject.getJSONArray("users"));
-                    followers.addAll(userList);
-                    followersAdapter.notifyDataSetChanged();
+                    users.addAll(userList);
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -97,28 +97,7 @@ public class UserProfileFragment extends DialogFragment {
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.d(TAG, "user failure");
             }
-        });
-    }
-
-    private void populateFollowing() {
-        TwitterClient client = TwitterApp.getRestClient(context);
-        client.getFollowingList(user.id, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                try {
-                    List<User> userList = User.fromJsonArray(json.jsonObject.getJSONArray("users"));
-                    following.addAll(userList);
-                    followingAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.d(TAG, "user failure");
-            }
-        });
+        }, endpoint);
     }
 
     @Override
