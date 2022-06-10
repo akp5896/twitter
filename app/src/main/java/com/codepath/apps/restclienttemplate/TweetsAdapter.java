@@ -96,22 +96,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             likeTrigger(tweet);
             retweetTrigger(tweet);
 
-            binding.ivReply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
-                    ComposeTweet composeFragment = ComposeTweet.newInstance(tweet);
-                    composeFragment.show(fm, "fragment_compose_tweet");
-                }
+            binding.ivReply.setOnClickListener(view -> {
+                FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
+                ComposeTweet composeFragment = ComposeTweet.newInstance(tweet);
+                composeFragment.show(fm, "fragment_compose_tweet");
             });
 
-            binding.tvName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
-                    UserProfileFragment userFragment = UserProfileFragment.newInstance(tweet.user);
-                    userFragment.show(fm, "fragment_user_profile");
-                }
+            binding.tvName.setOnClickListener(view -> {
+                FragmentManager fm = ((TimelineActivity)context).getSupportFragmentManager();
+                UserProfileFragment userFragment = UserProfileFragment.newInstance(tweet.user);
+                userFragment.show(fm, "fragment_user_profile");
             });
 
             binding.tvRetweetCount.setText(tweet.retweets.toString());
@@ -134,85 +128,79 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
 
         private void retweetTrigger(Tweet tweet) {
-            binding.ivShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TwitterClient client = TwitterApp.getRestClient(context);
-                    if(!tweet.retweeted) {
-                        client.retweet(tweet.tweetId, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                                tweet.retweeted = true;
-                                tweet.retweets++;
-                                binding.tvRetweetCount.setText(tweet.retweets.toString());
-                                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_retweet));
-                                Log.i("LIKE", "success");
-                            }
+            binding.ivShare.setOnClickListener(view -> {
+                TwitterClient client = TwitterApp.getRestClient(context);
+                if(!tweet.retweeted) {
+                    client.retweet(tweet.tweetId, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            tweet.retweeted = true;
+                            tweet.retweets++;
+                            binding.tvRetweetCount.setText(tweet.retweets.toString());
+                            binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_retweet));
+                            Log.i("LIKE", "success");
+                        }
 
-                            @Override
-                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                                Log.i("LIKE", response);
-                            }
-                        });
-                    } else {
-                        client.destroyRetweet(tweet.tweetId, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                                tweet.retweeted = false;
-                                tweet.retweets--;
-                                binding.tvRetweetCount.setText(tweet.retweets.toString());
-                                binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_pressed));
-                                Log.i("LIKE", "success");
-                            }
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.i("LIKE", response);
+                        }
+                    });
+                } else {
+                    client.destroyRetweet(tweet.tweetId, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            tweet.retweeted = false;
+                            tweet.retweets--;
+                            binding.tvRetweetCount.setText(tweet.retweets.toString());
+                            binding.ivShare.setColorFilter(context.getResources().getColor(R.color.inline_action_pressed));
+                            Log.i("LIKE", "success");
+                        }
 
-                            @Override
-                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                                Log.i("LIKE", response);
-                            }
-                        });
-                    }
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.i("LIKE", response);
+                        }
+                    });
                 }
             });
         }
 
         private void likeTrigger(Tweet tweet) {
-            binding.ivHeart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TwitterClient client = TwitterApp.getRestClient(context);
-                    if(!tweet.isLiked) {
-                        client.likeTweet(tweet.tweetId, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                                tweet.isLiked = true;
-                                tweet.likes++;
-                                binding.tvLikesCount.setText(tweet.likes.toString());
-                                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_like_pressed));
-                                Log.i("LIKE", "success");
-                            }
+            binding.ivHeart.setOnClickListener(view -> {
+                TwitterClient client = TwitterApp.getRestClient(context);
+                if(!tweet.isLiked) {
+                    client.likeTweet(tweet.tweetId, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            tweet.isLiked = true;
+                            tweet.likes++;
+                            binding.tvLikesCount.setText(tweet.likes.toString());
+                            binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_like_pressed));
+                            Log.i("LIKE", "success");
+                        }
 
-                            @Override
-                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                                Log.i("LIKE", response);
-                            }
-                        });
-                    } else {
-                        client.destroyLike(tweet.tweetId, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                                tweet.isLiked = false;
-                                tweet.likes--;
-                                binding.tvLikesCount.setText(tweet.likes.toString());
-                                binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
-                                Log.i("LIKE", "success");
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                                Log.i("LIKE", response);
-                            }
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.i("LIKE", response);
+                        }
                     });
-                    }
+                } else {
+                    client.destroyLike(tweet.tweetId, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            tweet.isLiked = false;
+                            tweet.likes--;
+                            binding.tvLikesCount.setText(tweet.likes.toString());
+                            binding.ivHeart.setColorFilter(context.getResources().getColor(R.color.inline_action_disabled));
+                            Log.i("LIKE", "success");
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.i("LIKE", response);
+                        }
+                });
                 }
             });
         }

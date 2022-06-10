@@ -63,9 +63,9 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityTimelineBinding.inflate(getLayoutInflater());
-        setSupportActionBar(binding.header.toolbar);
+        //setSupportActionBar(binding.header.toolbar);
 
-        getSupportActionBar().setTitle("");
+       // getSupportActionBar().setTitle("");
         setContentView(binding.getRoot());
 
         client = TwitterApp.getRestClient(this);
@@ -81,7 +81,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 fetchTimelineAsync(0);
-                setBanner();
+                ProfileToolbar.setBanner(client, getApplicationContext(), binding.header);
             }
         });
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -99,48 +99,8 @@ public class TimelineActivity extends AppCompatActivity {
         binding.rvTimeline.addOnScrollListener(scrollListener);
 
         populateHomeTimeline();
-        setBanner();
-    }
-
-    private void setBanner() {
-        client.getUsername(new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                try {
-                    String name = json.jsonObject.getString("screen_name");
-                    Log.i(TAG, name);
-                    loadBanner(name);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.d(TAG, "cannot get current username");
-            }
-        });
-    }
-
-    private void loadBanner(String name) {
-        client.getBanner(name, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                try {
-                    String bannerUrl = json.jsonObject.getString("profile_banner_url");
-                    Glide.with(getApplicationContext()).load(bannerUrl).into(binding.header.ivBanner);
-                    Log.d(TAG, bannerUrl);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.d(TAG, "cannot get banner");
-            }
-        });
+        //setBanner();
+        ProfileToolbar.Initialize(binding.header, getApplicationContext(), this);
     }
 
     private void fetchTimelineAsync(int i) {
