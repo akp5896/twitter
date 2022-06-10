@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -34,7 +35,12 @@ public class ComposeActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
 
-        binding.btnTweet.setOnClickListener(new View.OnClickListener() {
+        binding.btnTweet.setOnClickListener(getButtonListener());
+    }
+
+    @NonNull
+    private View.OnClickListener getButtonListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String tweetContent = binding.etTweetText.getText().toString();
@@ -69,8 +75,9 @@ public class ComposeActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        };
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

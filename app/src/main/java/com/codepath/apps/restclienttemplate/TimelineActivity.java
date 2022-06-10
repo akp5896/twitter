@@ -63,7 +63,7 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityTimelineBinding.inflate(getLayoutInflater());
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.header.toolbar);
 
         getSupportActionBar().setTitle("");
         setContentView(binding.getRoot());
@@ -109,7 +109,7 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     String name = json.jsonObject.getString("screen_name");
                     Log.i(TAG, name);
-                    getBanner(name);
+                    loadBanner(name);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -122,13 +122,13 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
-    private void getBanner(String name) {
+    private void loadBanner(String name) {
         client.getBanner(name, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 try {
                     String bannerUrl = json.jsonObject.getString("profile_banner_url");
-                    Glide.with(getApplicationContext()).load(bannerUrl).into(binding.ivBanner);
+                    Glide.with(getApplicationContext()).load(bannerUrl).into(binding.header.ivBanner);
                     Log.d(TAG, bannerUrl);
                 } catch (JSONException e) {
                     e.printStackTrace();
