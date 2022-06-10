@@ -17,8 +17,9 @@
         android:text="@string/handle"
         android:textColor="@color/medium_gray"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvName"
+        android:layout_marginEnd="20dp"
         android:id="@+id/tvHandle"
         />
 

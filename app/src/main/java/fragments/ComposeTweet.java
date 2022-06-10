@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,5 +103,14 @@ public class ComposeTweet extends DialogFragment {
         // Inflate the layout for this fragment
         binding = FragmentComposeTweetBinding.inflate(getLayoutInflater());
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        getDialog().getWindow().setLayout((6 * width) / 7, (3 * height) / 5);
+        super.onStart();
     }
 }

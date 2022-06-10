@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,13 @@ public class UserProfileFragment extends DialogFragment {
         followingAdapter = new UserAdapter(following, context);
         binding.rvFollowing.setAdapter(followingAdapter);
         binding.rvFollowing.setLayoutManager(new LinearLayoutManager(context));
+
+        binding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
         populateFollowers();
         populateFollowing();
@@ -116,5 +124,14 @@ public class UserProfileFragment extends DialogFragment {
                 Log.d(TAG, "user failure");
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        getDialog().getWindow().setLayout((8 * width) / 9, (4 * height) / 5);
+        super.onStart();
     }
 }

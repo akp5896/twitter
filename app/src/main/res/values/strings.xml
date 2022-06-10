@@ -14,5 +14,6 @@
     <string name="following">Following:</string>
     <string name="name">name</string>
     <string name="handle">handle</string>
+    <string name="close">Close</string>
 
 </resources>
