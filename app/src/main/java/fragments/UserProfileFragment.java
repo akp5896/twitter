@@ -34,8 +34,8 @@ public class UserProfileFragment extends DialogFragment {
     private static final String TAG = "USER FRAGMENT";
     FragmentUserProfileBinding binding;
     User user;
-    private List<User> followers = new ArrayList<>();
-    private List<User> following = new ArrayList<>();
+    private final List<User> followers = new ArrayList<>();
+    private final List<User> following = new ArrayList<>();
     private UserAdapter followersAdapter;
     private UserAdapter followingAdapter;
     Context context;
@@ -59,12 +59,7 @@ public class UserProfileFragment extends DialogFragment {
         binding.rvFollowing.setAdapter(followingAdapter);
         binding.rvFollowing.setLayoutManager(new LinearLayoutManager(context));
 
-        binding.btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        binding.btnClose.setOnClickListener(view1 -> dismiss());
 
         populateFollowers();
         populateFollowing();
